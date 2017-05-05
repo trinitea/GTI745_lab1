@@ -12,15 +12,15 @@ public enum Flag
 
 public class FlagProperties : MonoBehaviour {
 
-    [SerializeField]
-    private Sprite SpriteX;
-    [SerializeField]
-    private Sprite SpriteO;
+    // breaks encapsulation rules !!!
+    public int SpriteIndexX;
+    public int SpriteIndexO;
 
-    [SerializeField]
-    private Color ColorX;
-    [SerializeField]
-    private Color ColorO;
+    public int ColorIndexX;
+    public int ColorIndexO;
+
+    public List<Sprite> AllSprites;
+    public List<Color> AllColors;
 
     private static FlagProperties instance = null;
 
@@ -45,16 +45,16 @@ public class FlagProperties : MonoBehaviour {
     private void InitDefault()
     {
         // Default
-        List<Sprite> sprites = Resources.LoadAll<Sprite>("Sprite/XO_2_mask").ToList();
+        AllSprites = Resources.LoadAll<Sprite>("Sprite/XO_2_mask").ToList();
 
-        if (sprites.Count > 1)
+        AllColors.Add(new Color(1.00f, 1.00f, 0.00f)); // Yellow
+        AllColors.Add(new Color(0.00f, 1.00f, 1.00f)); // Cyan
+
+        if (AllSprites.Count > 1 && AllColors.Count > 1)
         {
-            SpriteX = sprites[0];
-            SpriteO = sprites[1];
+            SpriteIndexX = ColorIndexX = 0;
+            SpriteIndexO = ColorIndexO = 1;
         }
-
-        ColorX = new Color(1.00f, 1.00f, 0.00f); // Yellow
-        ColorO = new Color(0.00f, 1.00f, 1.00f); // Cyan
     }
 
     public Color GetColorFor(Flag flag)
@@ -64,10 +64,10 @@ public class FlagProperties : MonoBehaviour {
         switch (flag)
         {
             case Flag.X:
-                color = ColorX;
+                color = AllColors[ColorIndexX];
                 break;
             case Flag.O:
-                color = ColorO;
+                color = AllColors[ColorIndexO];
                 break;
         }
 
@@ -81,13 +81,51 @@ public class FlagProperties : MonoBehaviour {
         switch (flag)
         {
             case Flag.X:
-                sprite = SpriteX;
+                sprite = AllSprites[SpriteIndexX];
                 break;
             case Flag.O:
-                sprite = SpriteO;
+                sprite = AllSprites[SpriteIndexO];
                 break;
         }
 
         return sprite;
+    }
+
+    public void SetSpriteFor(Flag flag, int index)
+    {
+        if (index < 0 || index > AllSprites.Count)
+        {
+            return;
+        }
+
+        switch(flag)
+        {
+            case Flag.X:
+                SpriteIndexX = index;
+                break;
+
+            case Flag.O:
+                SpriteIndexO = index;
+                break;
+        }
+    }
+
+    public void SetColorFor(Flag flag, int index)
+    {
+        if (index < 0 || index > AllColors.Count)
+        {
+            return;
+        }
+
+        switch (flag)
+        {
+            case Flag.X:
+                ColorIndexX = index;
+                break;
+
+            case Flag.O:
+                ColorIndexO = index;
+                break;
+        }
     }
 }

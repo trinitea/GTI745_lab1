@@ -23,18 +23,19 @@ public class Tile : MonoBehaviour {
             Debug.LogError("Tile required components are missing");
             return;
         }
-    }
 
-    void Start ()
-    {
-        SetFlag(Flag.None);
+        flag = Flag.None;
     }
 
     public void SetFlag(Flag newFlag)
     {
         flag = newFlag;
+        RefreshGraphic();
+    }
 
-        if(flag != Flag.None)
+    public void RefreshGraphic()
+    {
+        if (flag != Flag.None)
         {
 
             imageMask.showMaskGraphic = true;

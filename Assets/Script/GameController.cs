@@ -45,7 +45,10 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        CurrentPlayerFlag = Flag.X;
+        GameSet = true;
+        TextVictory.enabled = false;
+
+        CurrentPlayerFlag = Flag.None;
 
         if (tiles.Count != 9)
         {
@@ -54,22 +57,20 @@ public class GameController : MonoBehaviour
 
         TextScore.text = "X:0 vs O:0";
 
-        InitNewMatch();
+        DialogComponent.ShowPlayerOptionDialog(InitNewMatch);
     }
 
-    private void InitNewMatch()
+    private void InitNewMatch(Flag startingFlag)
     {
         GameSet = false;
         NbRemainingTiles = 9;
-
-        TextVictory.enabled = false;
 
         foreach (Tile tile in tiles)
         {
             tile.SetFlag(Flag.None);
         }
 
-        CurrentPlayerFlag = Flag.X; // can be set as random, X always starting or last Winner
+        CurrentPlayerFlag = startingFlag != Flag.None ? startingFlag : Flag.X; // can be set as random, X always starting or last Winner
 
         NextFlagIcon.sprite = FlagProperties.Instance.GetSpriteFor(CurrentPlayerFlag);
         NextFlagIcon.color = FlagProperties.Instance.GetColorFor(CurrentPlayerFlag);
@@ -93,7 +94,7 @@ public class GameController : MonoBehaviour
     {
         if(restart)
         {
-            InitNewMatch();
+            DialogComponent.ShowPlayerOptionDialog(InitNewMatch);
         }
     }
 
