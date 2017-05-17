@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour
         TextScore.text = "X:0 vs O:0";
 
         DialogComponent.ShowPlayerOptionDialog(InitNewMatch);
+        NextFlagIcon.enabled = false;
     }
 
     private void InitNewMatch(Flag startingFlag)
@@ -72,9 +73,12 @@ public class GameController : MonoBehaviour
 
         CurrentPlayerFlag = startingFlag != Flag.None ? startingFlag : Flag.X; // can be set as random, X always starting or last Winner
 
+        TextVictory.enabled = false;
+
         NextFlagIcon.sprite = FlagProperties.Instance.GetSpriteFor(CurrentPlayerFlag);
         NextFlagIcon.color = FlagProperties.Instance.GetColorFor(CurrentPlayerFlag);
 
+        NextFlagIcon.enabled = true;
         NextFlagIcon.GetComponent<Mask>().showMaskGraphic = true;
     }
 
